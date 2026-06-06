@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Máquina del Tiempo</title>
+<style>
+body{
+margin:0;
+background:#030712;
+color:#dffcff;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+}
+.container{max-width:950px;margin:auto;padding:15px;}
+.title{text-align:center;font-size:2.2rem;color:#7df9ff;margin:10px 0;}
+.subtitle{text-align:center;color:#b6ecff;margin-bottom:20px;}
+.console{
+border:2px solid #00d4ff;
+border-radius:18px;
+padding:15px;
+margin-bottom:16px;
+background:rgba(0,20,35,.85);
+box-shadow:0 0 25px rgba(0,212,255,.25);
+}
+.panel-title{color:#ffe082;margin-bottom:10px;}
+.grid{display:grid;grid-template-columns:1fr;gap:16px;}
+.flux{
+height:140px;position:relative;margin:20px auto;width:180px;
+}
+.line{
+position:absolute;background:#79f8ff;box-shadow:0 0 15px #79f8ff;
+}
+.l1{width:6px;height:120px;left:87px;top:0;}
+.l2{width:6px;height:90px;left:45px;top:45px;transform:rotate(35deg);}
+.l3{width:6px;height:90px;left:129px;top:45px;transform:rotate(-35deg);}
+.line{animation:pulse 1.2s infinite;}
+@keyframes pulse{50%{opacity:.3;}}
+.display{
+font-size:1.1rem;
+line-height:1.7;
+}
+.big{
+font-size:1.8rem;
+font-weight:bold;
+color:#7df9ff;
+}
+.progress{
+height:24px;background:#111;border-radius:20px;overflow:hidden;margin-top:10px;
+}
+.bar{
+height:100%;
+background:linear-gradient(90deg,#00d4ff,#7df9ff);
+width:0%;
+}
+.label{color:#ffe082;font-weight:bold;}
+.timebox{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin:10px 0;
+}
+.card{
+border:1px solid #1e90aa;
+padding:8px;
+border-radius:10px;
+}
+@media(max-width:600px){
+.timebox{grid-template-columns:1fr;}
+.title{font-size:1.8rem;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="title">⚡ LA MÁQUINA DEL TIEMPO ⚡</div>
+<div class="subtitle">Nuestra aventura comenzó el 14 de mayo de 2026.</div>
+
+<div class="flux">
+<div class="line l1"></div>
+<div class="line l2"></div>
+<div class="line l3"></div>
+</div>
+
+<div class="console">
+<div class="panel-title">Panel Familiar</div>
+<div id="family"></div>
+<div class="progress"><div id="familyBar" class="bar"></div></div>
+</div>
+
+<div class="grid">
+<div class="console">
+<div class="panel-title">Leo</div>
+<div id="leo"></div>
+<div class="progress"><div id="leoBar" class="bar"></div></div>
+</div>
+
+<div class="console">
+<div class="panel-title">Alex</div>
+<div id="alex"></div>
+<div class="progress"><div id="alexBar" class="bar"></div></div>
+</div>
+</div>
+</div>
+
+<script>
+const leo=new Date("2026-05-14T19:32:00");
+const alex=new Date("2026-05-14T20:50:00");
+const familia=new Date("2026-05-14T19:32:00");
+
+function detalle(fecha){
+ const ahora=new Date();
+ let años=ahora.getFullYear()-fecha.getFullYear();
+ const cumplido=(ahora.getMonth()>fecha.getMonth())||
+ (ahora.getMonth()==fecha.getMonth() && ahora.getDate()>=fecha.getDate());
+ if(!cumplido) años--;
+
+ const ms=ahora-fecha;
+ const dias=Math.floor(ms/86400000);
+ const horas=Math.floor(ms/3600000)%24;
+ const minutos=Math.floor(ms/60000)%60;
+ const segundos=Math.floor(ms/1000)%60;
+
+ let prox=new Date(
+  ahora.getFullYear(),
+  fecha.getMonth(),
+  fecha.getDate(),
+  fecha.getHours(),
+  fecha.getMinutes()
+ );
+ if(prox<ahora) prox.setFullYear(prox.getFullYear()+1);
+
+ return {años,dias,horas,minutos,segundos,prox};
+}
+
+function render(id,bar,fecha,nombre){
+ const d=detalle(fecha);
+
+ document.getElementById(id).innerHTML=`
+ <div class="display">
+ <div class="big">${d.años} años</div>
+
+ <div class="timebox">
+   <div class="card"><span class="label">Tiempo transcurrido</span><br>
+   ${d.dias} días<br>${d.horas}h ${d.minutos}m ${d.segundos}s</div>
+
+   <div class="card"><span class="label">Destino temporal</span><br>
+   Próximo cumpleaños<br>${d.prox.toLocaleString('es-ES')}</div>
+ </div>
+
+ <div class="card">
+ <span class="label">Estado de misión</span><br>
+ ${nombre} avanza por su viaje hacia los 100 años.
+ </div>
+ </div>`;
+
+ document.getElementById(bar).style.width=Math.min(d.años,100)+"%";
+}
+
+function actualizar(){
+ render("family","familyBar",familia,"La familia");
+ render("leo","leoBar",leo,"Leo");
+ render("alex","alexBar",alex,"Alex");
+}
+actualizar();
+setInterval(actualizar,1000);
+</script>
+</body>
+</html>
