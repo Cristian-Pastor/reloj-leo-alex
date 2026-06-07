@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reloj Temporal Leo & Alex</title>
+<style>
+body{background:#0b0b0b;color:#ff9f1c;font-family:Arial,sans-serif;margin:0;padding:20px}
+.panel{max-width:1000px;margin:auto;border:2px solid #444;padding:20px;border-radius:12px;background:#111}
+h1{text-align:center}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{border:1px solid #555;padding:15px;border-radius:10px}
+.big{font-size:1.4em;color:#7CFF6B}
+.orange{color:#ffb347}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="panel">
+<h1>⚡ Reloj Temporal Leo & Alex ⚡</h1>
+<p>Actualización automática cada segundo.</p>
+<div class="card">
+<div id="familia" class="big"></div>
+</div>
+<div class="grid">
+<div class="card">
+<h2 style="color:#7CFF6B">LEO</h2>
+<div id="leo"></div>
+</div>
+<div class="card">
+<h2 class="orange">ALEX</h2>
+<div id="alex"></div>
+</div>
+</div>
+</div>
+
+<script>
+const leoBirth=new Date("2026-05-14T19:32:00");
+const alexBirth=new Date("2026-05-14T20:50:00");
+const familyBirth=new Date("2026-05-14T19:32:00");
+
+function fmt(diff){
+ let s=Math.floor(diff/1000);
+ const d=Math.floor(s/86400); s%=86400;
+ const h=Math.floor(s/3600); s%=3600;
+ const m=Math.floor(s/60); s%=60;
+ return `${d} días ${h} h ${m} min ${s} seg`;
+}
+
+function tick(){
+ const now=new Date();
+ document.getElementById("familia").innerText =
+ "Tiempo desde que llegaron a nuestras vidas: "+fmt(now-familyBirth);
+
+ document.getElementById("leo").innerHTML =
+ "<b>Nacimiento:</b> 14/05/2026 19:32<br><b>Edad:</b> "+fmt(now-leoBirth);
+
+ document.getElementById("alex").innerHTML =
+ "<b>Nacimiento:</b> 14/05/2026 20:50<br><b>Edad:</b> "+fmt(now-alexBirth);
+}
+tick();
+setInterval(tick,1000);
+</script>
+</body>
+</html>
